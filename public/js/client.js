@@ -11,25 +11,21 @@ $(function () {
         let element_pdf = $("#pdf");
         let element_png = $("#png");
         let element_svg = $("#svg");
+        let element_jpg = $("#jpg");
 
         // upload
         let upload_service = new UploadService(doc, url_post);
         let meta_data = await upload_service.upload();
+        let total_page = meta_data.total_page;
         console.log("META-DATA:", meta_data);
-
         // converting
         let converting_doc = new ConvertingDocument(meta_data);
         converting_doc.connect(server);
 
         // viewer
-        let viewer = new Viewer(element_pdf, element_png, element_svg);
+        let viewer = new Viewer(element_pdf, element_png, element_svg, element_jpg, total_page);
         viewer.switch(converting_doc);
 
-        // btn send
-        $("#btn_send").click(() => {
-            let page_num = $("#number").val();
-            viewer.show(page_num);
-        })
     });    
 })
 

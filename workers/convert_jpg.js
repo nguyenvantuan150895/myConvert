@@ -1,7 +1,8 @@
 const JpgConverter = require("../converters/jpg");
 class ConvertJpgWorker {
-    constructor(storage) {
+    constructor(storage, io) {
         this.storage = storage;
+        this.io = io;
     }
 
     async process(job, done) {
@@ -14,6 +15,12 @@ class ConvertJpgWorker {
             job.progress(100, 100);
             await this.storage.set(doc_id, {progress: 100});
             done();
+            this.io.sockets.in('document_' + doc_id).emit('progress',{
+                page_done: 1,
+                types: ['jpg']
+            });
+            await this.storage.set(doc_id, { types: ['jpg'].toString()});
+            await this.storage.set(doc_id, { page_done: 1 });
         }
     }
 }

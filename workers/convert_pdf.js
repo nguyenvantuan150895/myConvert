@@ -12,12 +12,15 @@ class ConvertPdfWorker {
         let doc_id = job.data.doc_id;
         let doc_path = job.data.doc_path;
         let out_path = `/tmp/storage/document/${doc_id}`;
-        let converter = new PdfConverter(doc_id, this.storage, doc_path, out_path, async (percent, page_done) => {
-            // console.log("Progress:", percent);
+        let converter = new PdfConverter(doc_id,doc_path, out_path, async (percent, page_done, types) => {
             await this.storage.set(doc_id, { progress: percent });
             if(Number(percent) == 100) done();
-            if(page_done != undefined) {
-                this.io.sockets.in('document_' + doc_id).emit('progress', page_done);
+            if(page_done != undefined && types != undefined) {
+                this.io.sockets.in('document_' + doc_id).emit('progress',{
+                    page_done: page_done,
+                    types: types
+                });
+                await this.storage.set(doc_id, { types: types.toString()});
                 await this.storage.set(doc_id, { page_done: page_done });
             }
         });

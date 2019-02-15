@@ -9,7 +9,6 @@ class ConvertingDocument {
         this.socket = io(url);
         // this.socket.on('progress', this.onProgress.bind(this));
         this.socket.on('progress', (last_event) => {
-            // console.log("Last_event:", last_event);
             this.onProgress(last_event);
         });
         this.socket.emit('regis_document', this.document_metadata, (last_event) => {
@@ -22,10 +21,12 @@ class ConvertingDocument {
         let path_pdf = `/document/${doc_id}/page_${page_num}.pdf`;
         let path_png = `/document/${doc_id}/page_${page_num}.png`;
         let path_svg = `/document/${doc_id}/page_${page_num}.svg`;
+        let path_jpg = `/document/${doc_id}/page_${page_num}.jpg`;
         return {
             path_pdf: path_pdf,
             path_png: path_png,
-            path_svg: path_svg
+            path_svg: path_svg,
+            path_jpg: path_jpg
         }
     }
 
@@ -43,13 +44,13 @@ class ConvertingDocument {
         }
     }
 
-    //data: {type="converted", page_num, types}
-    onProgress(last_page) {
-        this.last_page = last_page;
-        // let page_metadata = this.buildMetadata(page_num);
+    //data: {page_done, types}
+    onProgress(data) {
+        console.log("DATA:", data);
+        this.last_page = data.page_done;
         Object.keys(this.listener).map((key) => {
             let page_metadata = this.buildMetadata(key);
-            if(key <= last_page) {
+            if(key <= data.page_done) {
                 this.listener[key].map((callback) => {
                     callback(page_metadata);
                 });

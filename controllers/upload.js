@@ -1,6 +1,7 @@
 const debug = require('debug')('action::upload')
 const uuidv1 = require('uuid/v1');
 const Config = require("../config");
+const exec = require('child_process').exec;
 
 
 function AsyncMv(doc, path) {
@@ -51,6 +52,18 @@ function createJobAsync(queue, name, opts) {
     })
 }
 
+
+function getTotalPage(doc_path) {
+    return new Promise((resolve, reject) => {
+        exec('pdftk ' + doc_path + ' dump_data | grep NumberOfPages', (error, stdout, stderr) => {
+            let pages = parseInt(stdout.replace("NumberOfPages: ", ""));
+            if (error) resolve(1);
+            else resolve(pages);
+        });
+    });
+}
+
+
 class UploadAction {
     constructor(storage, queue) {
         this.storage = storage;
@@ -77,12 +90,13 @@ class UploadAction {
             doc_id: doc_id,
             doc_path: doc_file.path
         });
-
+        let total_page = await getTotalPage(doc_file.path);
         res.json({ 
             status: true,
             doc_id: doc_id,
             origin: "/document/" + doc_id + '/meta.docs',
             base_url: "/document/" + doc_id,
+            total_page: total_page
         });
     }
 }

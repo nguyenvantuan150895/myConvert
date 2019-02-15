@@ -85,12 +85,12 @@ async function bootup() {
     });
 
     queue.process('convert_png', (job, done) => {
-        let worker = new ConvertPngWorker(redis_storage);
+        let worker = new ConvertPngWorker(redis_storage, io);
         worker.process(job, done);
     });
 
     queue.process('convert_jpg', (job, done) => {
-        let worker = new ConvertJpgWorker(redis_storage);
+        let worker = new ConvertJpgWorker(redis_storage, io);
         worker.process(job, done);
     });
 }

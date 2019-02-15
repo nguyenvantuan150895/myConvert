@@ -3,44 +3,44 @@ const jsonfile = require("jsonfile");
 const fs = require("fs"); //Load the filesystem module
 
 class PdfConverter {
-    constructor(doc_id, storage, tmp_path, output_path, callback) {
+    constructor(doc_id, tmp_path, output_path, callback) {
         this.doc_id = doc_id;
-        this.storage = storage,
         this.tmp_path = tmp_path;
         this.output_path = output_path;
         this.callback = callback;
     }
 
-    async convert(){
+    async convert() {
         let total_page = await this.getTotalPage();
-        // console.log("total_page:", total_page);
-        await this.storage.set(this.doc_id, { total_page: total_page });
         let task_complete = 0;
         let total_task = total_page * 2 + 1;
         let result_convert = [];
-        
+        let types_page;
+
         let devision_pdf = await this.devisionPdf();
         if (devision_pdf.status == true) {
             task_complete++;
-            this.callback(Math.floor((task_complete / total_task) * 100), undefined);
+            this.callback(Math.floor((task_complete / total_task) * 100), undefined, types_page);
         }
         for (let i = 1; i <= total_page; i++) {
             // pdf -> svg
             let cv_svg = await this.convertPDFtoSVG(i);
             if (cv_svg.status == true) {
                 task_complete++;
-                this.callback(Math.floor((task_complete / total_task) * 100), undefined);
+                this.callback(Math.floor((task_complete / total_task) * 100), undefined, types_page);
                 // svg -> png
                 let cv_png = await this.convertSVGtoPNG(i);
                 if (cv_png.status == true) {
                     result_convert.push(cv_png);
                     task_complete++;
-                    this.callback(Math.floor((task_complete / total_task) * 100), i);
+                    //get types data
+                    types_page = this.getTypesPage(i);
+                    this.callback(Math.floor((task_complete / total_task) * 100), i, types_page);
                 }
             }
         }
         let types = await this.getTypeData(result_convert);
-        await this.saveFileMeta( total_page, types);
+        await this.saveFileMeta(total_page, types);
     }
 
     getTotalPage() {
@@ -133,13 +133,10 @@ class PdfConverter {
         });
 
         if (over_size_pages.length == 0) {
-            return {
-                types: ['svgz', 'png', 'svg', 'pdf'],
-            };
+            return  ['svgz', 'png', 'svg', 'pdf'];
+            
         } else {
-            return {
-                types: ['png', 'svgz', 'svg', 'pdf'],
-            };
+            return  ['png', 'svgz', 'svg', 'pdf'];
         }
     }
 
@@ -154,10 +151,25 @@ class PdfConverter {
         }
         return new Promise((resolve, reject) => {
             jsonfile.writeFile(meta_file, obj, function (err) {
-                if(err) return reject(err);
-                else resolve({status: true});
+                if (err) return reject(err);
+                else resolve({ status: true });
             })
         })
+    }
+
+    getTypesPage(page) {
+        page = this.output_path + "/page_" + page + ".svg";
+        if (page != undefined && page.size != undefined && page.size > 2 * 1024 * 1024) {
+            return {
+                types: ['png', 'svgz', 'svg', 'pdf'],
+            };
+        }
+        else {
+            return {
+                types: ['svgz', 'png', 'svg', 'pdf'],
+            };
+        }
+       
     }
 
 }
