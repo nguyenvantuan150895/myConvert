@@ -7,8 +7,9 @@ const cors = require('cors');
 const Config = require("./config");
 const server = require("http").Server(app);
 const io = require("socket.io")(server);
-const redis = require('socket.io-redis');
-io.adapter(redis({ host: 'localhost', port: 6379 }));
+
+// const redisAdapter = require('socket.io-redis');
+// io.adapter(redisAdapter({ host: 'localhost', port: 6379 }));
 const bodyParser = require('body-parser');
 
 //workers
@@ -79,7 +80,7 @@ async function bootup() {
     await socket.listen();
 
     queue.process('convert_pdf', (job, done) => {
-        let worker = new ConvertPdfWorker(redis_storage);
+        let worker = new ConvertPdfWorker(redis_storage, io);
         worker.process(job, done);
     });
 

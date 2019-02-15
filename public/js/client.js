@@ -25,8 +25,7 @@ $(function () {
         let viewer = new Viewer(element_pdf, element_png, element_svg);
         viewer.switch(converting_doc);
 
-        // show btn
-        toggleBtn();
+        // btn send
         $("#btn_send").click(() => {
             let page_num = $("#number").val();
             viewer.show(page_num);
@@ -34,10 +33,6 @@ $(function () {
     });    
 })
 
-let toggleBtn = () => {
-    $("#btn_send").show();
-    $("#number").show();
-}
 
 
 

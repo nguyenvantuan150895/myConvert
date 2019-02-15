@@ -11,14 +11,16 @@ class Viewer {
     }
 
     show(page_num) {
-        this.setImageLoading('/image/loading.gif');
+        // console.log("Page require:", page_num);
+        this.setImageLoading('/image/loading2.jpg');
         this.document.offPageListen();
-        this.document.onPageListen(page_num, (data) => {
+        this.document.onPageListener(page_num, (data) => {
             this.setImagePageNum(data);
         });
     }
 
     setImageLoading(path_image) {
+        console.log("SET-IMAGE");
         this.pdf.attr('src', path_image);
         this.png.attr('src', path_image);
         this.svg.attr('src', path_image);

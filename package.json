@@ -20,6 +20,7 @@
     "kue": "^0.11.6",
     "morgan": "^1.9.1",
     "nodemon": "^1.18.10",
+    "pdfjs-dist": "^2.0.943",
     "redis": "^2.8.0",
     "socket.io": "^2.2.0",
     "socket.io-redis": "^5.2.0",

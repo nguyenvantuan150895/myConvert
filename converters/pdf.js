@@ -40,7 +40,7 @@ class PdfConverter {
             }
         }
         let types = await this.getTypeData(result_convert);
-        // await this.saveFileMeta( total_page, types);
+        await this.saveFileMeta( total_page, types);
     }
 
     getTotalPage() {

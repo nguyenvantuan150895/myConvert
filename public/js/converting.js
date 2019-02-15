@@ -7,17 +7,21 @@ class ConvertingDocument {
 
     connect(url = "http://localhost:3000") {
         this.socket = io(url);
-        this.socket.on('progress', this.onProgress.bind(this));
+        // this.socket.on('progress', this.onProgress.bind(this));
+        this.socket.on('progress', (last_event) => {
+            // console.log("Last_event:", last_event);
+            this.onProgress(last_event);
+        });
         this.socket.emit('regis_document', this.document_metadata, (last_event) => {
             this.onProgress(last_event);
         });
     }
-
-    buildMetaData(page_num) {
+   
+    buildMetadata(page_num) {
         let doc_id = this.document_metadata.doc_id;
-        let path_pdf = `/document/${doc_id}/path_${page_num}.pdf`;
-        let path_png = `/document/${doc_id}/path_${page_num}.png`;
-        let path_svg = `/document/${doc_id}/path_${page_num}.svg`;
+        let path_pdf = `/document/${doc_id}/page_${page_num}.pdf`;
+        let path_png = `/document/${doc_id}/page_${page_num}.png`;
+        let path_svg = `/document/${doc_id}/page_${page_num}.svg`;
         return {
             path_pdf: path_pdf,
             path_png: path_png,
@@ -31,7 +35,7 @@ class ConvertingDocument {
 
     onPageListener(page_num, callback) {
         if (this.last_page >= page_num) {
-            let page_metadata = this.buildMetaData(page_num);
+            let page_metadata = this.buildMetadata(page_num);
             callback(page_metadata);
         } else {
             this.listener[page_num] = this.listener[page_num] || []; // array
@@ -40,10 +44,12 @@ class ConvertingDocument {
     }
 
     //data: {type="converted", page_num, types}
-    onProgress(page_num) {
-        let page_metadata = this.buildMetadata(page_num);
+    onProgress(last_page) {
+        this.last_page = last_page;
+        // let page_metadata = this.buildMetadata(page_num);
         Object.keys(this.listener).map((key) => {
-            if(key <= page_num) {
+            let page_metadata = this.buildMetadata(key);
+            if(key <= last_page) {
                 this.listener[key].map((callback) => {
                     callback(page_metadata);
                 });
@@ -54,6 +60,18 @@ class ConvertingDocument {
 }
 
 window.ConvertingDocument = ConvertingDocument;
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
