@@ -1,0 +1,6 @@
+Using below package to split pdf pages and compress to svg and svgz
+
+pdftk
+pdf2svg
+svgo-compress-image
+imagemagick
