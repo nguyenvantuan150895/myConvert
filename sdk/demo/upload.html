@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <title>Upload File</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+    <script src="/dist/document-converting-service.js"></script>
+    <script src="upload.js"></script>
+  </head>
+
+  <body>
+    <div class="container-fluid block1">
+      <div class="row">
+        <div class="col-sm-12">
+          <span>Please choose file upload</span>
+          <input type="file" name="" id="doc">
+          <button onclick="window.upload()" >Upload</button>
+          <br>
+          <br>
+          <br>
+          <span id="page_num">_</span>
+          <button onclick="window.back()" >Back</button>
+          <button onclick="window.next()" >Next</button>
+          <img style="width: 800px;height: 800px" id="image_viewer">
+          <p id = "info_err_upload">Cannot read property 'mimetype' of undefined</p>
+          <div id = "info_meta_data"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Upload File</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css'>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+  
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/client.js"></script>
+  <script src="/js/uploadService.js"></script>
+  <script src="/js/viewerUpload.js"></script>
+</head>
+
+<body>
+  <div class="container-fluid block1">
+    <div class="row">
+      <div class="col-sm-12">
+        Please choose file upload: <input type="file" name="" id="doc">
+        <br> <br> <br>
+        <p id = "info_err_upload">Cannot read property 'mimetype' of undefined</p>
+        <div id = "info_meta_data"></div>
+      </div>
+    </div>
+
+  </div>
+</body>
+
+</html>

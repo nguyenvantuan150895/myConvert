@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Demo Convert File</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css'>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/twbs-pagination/1.4.1/jquery.twbsPagination.min.js'></script>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/client.js"></script>
+  <script src="/js/getService.js"></script>
+  <script src="/js/convertService.js"></script>
+  <script src="/js/viewerConverting.js"></script>
+  <script src="/js/viewerConverted.js"></script>
+
+</head>
+
+<body>
+  <div class="container-fluid block1">
+    <div class="row">
+      <div class="col-sm-12">
+        Please enter doc_id: <input type="text" name="" id="doc_id">
+        <button id="btn_submit">Submit</button>
+        <br> <br> <br>
+        <p id="show_total_page" style="display: none"></p>
+        <ul id="pagination" class="pagination-sm"></ul>
+      </div>
+    </div>
+    <p id = "err_id"> Sorry. Id not found!</p>
+    <div class="row" style="height: 380px; padding: 20px">
+      <div class="col-sm-4 view_image">
+        <p>PNG</p>
+        <img src="" style="width: 100%; height: 380px; " id="png">
+      </div>
+      <div class="col-sm-4 view_image">
+        <p>PDF</p>
+        <iframe src="" frameborder="0" style="width: 100%; height: 380px;" id="pdf"></iframe>
+      </div>
+      <div class="col-sm-4 view_image">
+        <p>SVG</p>
+        <img src="" style="width: 100%; height: 380px; " id="svg">
+      </div>
+      <div class="col-sm-4 view_image">
+        <p>JPG</p>
+        <img src="" style="width: 100%; height: 380px; " id="jpg">
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

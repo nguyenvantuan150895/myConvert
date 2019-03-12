@@ -1,4 +1,6 @@
 const PngConverter = require("../converters/png");
+const Config = require("../config");
+
 class ConvertPngWorker {
     constructor(storage, io) {
         this.storage = storage;
@@ -8,7 +10,7 @@ class ConvertPngWorker {
     async process(job, done) {
         let doc_id = job.data.doc_id;
         let doc_path = job.data.doc_path;
-        let out_path = `/tmp/storage/document/${doc_id}`;
+        let out_path = `${Config.DOC_PATH}/storage/document/${doc_id}`;
         let converter = new PngConverter(doc_id, doc_path, out_path);
         let rs = await converter.convert();
         if(rs.status == true) {

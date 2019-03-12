@@ -15,7 +15,7 @@ class JpgConverter {
             this.convertPng2svg().then(function (converted) {
                 var meta_file = output_path + '/meta.docs';
                 var obj = {
-                    status: true,
+                    status: 'converted',
                     origin: "/document/" + doc_id + '/meta.docs',
                     pages: converted.pages,
                     base_url: "/document/" + doc_id,

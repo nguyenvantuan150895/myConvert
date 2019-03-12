@@ -1,0 +1,55 @@
+{
+  "name": "document-converting-service",
+  "version": "0.0.0",
+  "description": "Description about my awesome project.",
+  "main": "./dist/document-converting-service.js",
+  "scripts": {
+    "build": "gulp dev",
+    "test": "istanbul test --report html -x 'vendor/**' _mocha",
+    "test-travis": "istanbul cover -x 'vendor/**' _mocha -- -R spec;A=$?;cat coverage/lcov.info | coveralls;exit $A"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/amazing/project.git"
+  },
+  "author": "Amazing author",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/amazing/project/issues"
+  },
+  "homepage": "https://github.com/amazing/project",
+  "devDependencies": {
+    "chai": "*",
+    "coveralls": "*",
+    "gulp": "^3.9.1",
+    "gulp-mocha": "*",
+    "gulp-plumber": "*",
+    "gulp-rename": "*",
+    "gulp-uglify": "*",
+    "gulp-util": "*",
+    "gulp-watch": "*",
+    "istanbul": "*",
+    "mocha": "*",
+    "through2": "*",
+    "webpack": "*"
+  },
+  "engines": {
+    "node": ">=0.9",
+    "npm": ">=1.2.10"
+  },
+  "dependencies": {
+    "await-to-js": "^2.0.1",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-runtime": "^6.26.0",
+    "gulp-babel": "^6.1.2",
+    "gulp-cli": "^1.4.0",
+    "gulp-watch": "^4.3.11",
+    "promise-queue": "^2.2.5",
+    "sdp-transform": "^2.3.0",
+    "webpack": "^3.4.1"
+  }
+}

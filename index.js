@@ -6,7 +6,8 @@ const morgan = require('morgan');
 const cors = require('cors');
 const Config = require("./config");
 const server = require("http").Server(app);
-const io = require("socket.io")(server);
+const io = require("socket.io")(server, { path: '/document/socket.io'});
+const fs = require("fs");
 
 // const redisAdapter = require('socket.io-redis');
 // io.adapter(redisAdapter({ host: 'localhost', port: 6379 }));
@@ -48,17 +49,39 @@ app.all('/', function (req, res, next) {
 });
 
 app.use(fileUpload());
-//get
+
+// upload
 app.get('/upload', (req, res) => {
-    res.render('home');
+    res.render('upload');
 })
-//post
+
 app.post('/upload', async (req, res) => {
     let action = new UploadAction(redis_storage, queue);
     try {
         await action.process(req, res);
     } catch (e) {
         res.json({ status: false, err: e.toString() });
+    }
+});
+
+// view page convert
+app.get('/view', async (req, res) => {
+    res.render('convert');
+})
+
+app.get('/document/job/:id',(req, res) => {
+    try {
+        let doc_id = req.params.id;
+        let rs = fs.readFileSync(`${Config.DOC_PATH}/storage/document/${doc_id}/meta.docs`);
+        rs = JSON.parse(rs.toString());
+        res.json({
+            status: rs.status,
+            pages: rs.pages,
+            types: rs.types,
+            base_url: rs.base_url
+            });
+    } catch (e) {
+        res.json({ status: false, err: 'id not found!'});
     }
 });
 
@@ -79,55 +102,20 @@ async function bootup() {
     const socket = new Socket(io, redis_storage);
     await socket.listen();
 
-    queue.process('convert_pdf', (job, done) => {
+    queue.process('convert_pdf', Config.CONCURRENT_JOB, (job, done) => {
         let worker = new ConvertPdfWorker(redis_storage, io);
         worker.process(job, done);
     });
 
-    queue.process('convert_png', (job, done) => {
+    queue.process('convert_png', Config.CONCURRENT_JOB, (job, done) => {
         let worker = new ConvertPngWorker(redis_storage, io);
         worker.process(job, done);
     });
 
-    queue.process('convert_jpg', (job, done) => {
+    queue.process('convert_jpg', Config.CONCURRENT_JOB, (job, done) => {
         let worker = new ConvertJpgWorker(redis_storage, io);
         worker.process(job, done);
     });
 }
 
 bootup();
-
-
-
-
-
-
-
-
-
-
-
-// app.get('/document/job/:id', async (req, res) => {
-//     try {
-//         let id = req.params.id;
-//         let job_info = await redis_storage.get(id, ["progress"]);
-//         let path = await redis_storage.get(id, ["path"]);
-//         let type = await redis_storage.get(id, ["type"]);
-//         console.log("PATH:", path);
-//         if (job_info[0] == null) { job_info[0] = 0 }
-//         if (path[0] != null && path.length > 0) {
-//             res.json({
-//                 status: true,
-//                 origin: "/document/" + id + '/meta.docs',
-//                 base_url: "/document/" + id,
-//                 progress: job_info[0],
-//                 path: path[0],
-//                 type: type[0]
-//             });
-//         } else {
-//             res.json({ status: false, err: "id not found" });
-//         }
-//     } catch (e) {
-//         res.json({ status: false, err: e.toString() });
-//     }
-// });
